@@ -11,6 +11,28 @@ int Server::perr(std::string err, int sockfd)
 	exit(-1);
 }
 
+void Server::checkCommands(Server &server, std::string buffer, int socket)
+{
+	std::stringstream ss(buffer);
+    (void)server;
+	(void)socket;
+    std::string line;
+    this->commands.clear();
+
+    while(std::getline(ss, line))
+    {
+        std::size_t prev = 0, pos;
+        while ((pos = line.find_first_of(" \n", prev)) != std::string::npos)
+        {
+            if (pos > prev)
+                this->commands.push_back(line.substr(prev, pos-prev));
+            prev = pos+1;
+        }
+        if (prev < line.length())
+            this->commands.push_back(line.substr(prev, std::string::npos));
+    }
+}
+
 void Server::initilizeServer()
 {
     server_address.sin_family = AF_INET; // IPv4
@@ -26,7 +48,6 @@ void Server::initilizeServer()
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
 		perr("error setting socket option", sockfd);
 
-
 	if ((bind(sockfd, (struct sockaddr *)&server_address, sizeof(server_address))) < 0)
     {
 		perror("bind KO");
@@ -38,6 +59,25 @@ void Server::initilizeServer()
 	listen(sockfd, 3) == SOCKET_ERROR ? perr("listen error listening on socket", sockfd) : printf("listen OK!\n");
 	FD_ZERO(&readfds);
 	FD_SET(sockfd, &readfds);
+}
+
+
+void Server::executeCommand()
+{
+	std::string cmds[] = {PASS, NICK, USER};
+	
+	// std::vector<fpoint> t = {&Server::getPort};
+
+	for (int i = 0; i < cmds->size(); i++)
+	{
+		for ( int j = 0; j < commands.size(); j++)
+		{
+			if (cmds[i] == commands[j])
+			{
+				std::cout << "Finded function: " << cmds[i] << " " << commands[j+1] << std::endl;
+			}
+		}
+	}
 }
 
 Server::Server(int port, std::string arg_pass)
@@ -68,6 +108,7 @@ Server::Server(int port, std::string arg_pass)
 				connected_clients.push_back(new_socket);
 			}
 		}
+		
 		int valread;
 		char buffer[1024] = {0};
 		for (int i = 0; i < connected_clients.size(); i++)
@@ -75,15 +116,8 @@ Server::Server(int port, std::string arg_pass)
 			if (FD_ISSET(connected_clients[i], &tmpfds))
 			{
 				int valread = recv(connected_clients[i], buffer, sizeof(buffer), 0);
-
-				//parser(buffer);
-				// PASS 12USER3 USER faruk NICK n_faruk
-
-				// PASS 123
-				// USER faruk
-				// std::string identity = ":n_faruk!faruk@127.0.0.1 JOIN #a\r\n"; // buraya ( ":" + users.getnickname() + "!" + users.getusername() + "@" + users.gethost() + " JOIN " + channelName)
-				// send(new_socket , identity.c_str(), identity.size(), 0);
-
+                checkCommands(*this, buffer, connected_clients[i]);
+				executeCommand();
 				if (valread > 0)
 				{
 					// add send message to other clients
