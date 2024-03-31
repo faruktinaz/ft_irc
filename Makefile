@@ -1,28 +1,27 @@
-CPP = c++
+NAME = ircserver
 
-FLAGS = #-Wall -Werror -Wextra -std=c++98
-
-NAME = ircserv
-
-SRC = Channel/Channel.cpp Client/Client.cpp Server/Server.cpp \
+SRCS = 	Channel/Channel.cpp Client/Client.cpp Server/Server.cpp \
 		main.cpp
 
-OBJ = $(SRC:.cpp=.o)
+OBJS = $(SRCS:.cpp=.o)
+CXX_STANDARD = c++98
+CXX = c++
+CXXFLAGS = -g # -Wall -Wextra -Werror -std=$(CXX_STANDARD) #-fsanitize=address 
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-		$(CPP) $(FLAGS) $(OBJ) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
 
 %.o: %.cpp
-	$(CPP) $(FLAGS) -c $< -o $@
-
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ)
+	rm -f $(OBJS)
 
-fclean:
-	rm -rf $(NAME) $(OBJ)
-re: clean all
+fclean: clean
+	rm -rf $(NAME)
 
-.PHONY: clean all re
+re: fclean all
+
+.PHONY: all clean fclean re
