@@ -61,20 +61,39 @@ void Server::initilizeServer()
 	FD_SET(sockfd, &readfds);
 }
 
-
-void Server::executeCommand()
+void Server::setUser(std::string username, int id)
 {
-	std::string cmds[] = {PASS, NICK, USER};
+	clients[id].setUserName(username);
+	std::cout << "clients vectorune ait "<< id << ". indexteki, soket numarasi "<< clients[id].getSocket() << " olan clientin Username'i " << username << " olarak set." << std::endl;
+}
+
+void Server::setNick(std::string nickname, int id)
+{
+	clients[id].setNickName(nickname);
+	std::cout << "clients vectorune ait "<< id << ". indexteki, soket numarasi "<< clients[id].getSocket() << " olan clientin nickname'i " << nickname << " olarak set." << std::endl;
+}
+
+void Server::setPass(std::string pass, int id)
+{
+	clients[id].setPass(pass);
+	std::cout << "clients vectorune ait "<< id << ". indexteki, soket numarasi "<< clients[id].getSocket() << " olan clientin şifresi " << pass << " olarak set." << std::endl;
+}
+
+void Server::executeCommand(int id)
+{
+	std::string cmds[] = {USER, NICK, PASS};
 	
-	// std::vector<fpoint> t = {&Server::getPort};
+	std::vector<fpoint> tfun = {&Server::setUser, &Server::setNick, &Server::setPass};
 
 	for (int i = 0; i < cmds->size(); i++)
 	{
 		for ( int j = 0; j < commands.size(); j++)
 		{
-			if (cmds[i] == commands[j])
+			if ((cmds[i] == commands[j]) && (j+1 <= commands.size()))
 			{
+				(this->*tfun[i])(commands[j+1], id);
 				std::cout << "Finded function: " << cmds[i] << " " << commands[j+1] << std::endl;
+	
 			}
 		}
 	}
@@ -97,6 +116,9 @@ Server::Server(int port, std::string arg_pass)
 		if (FD_ISSET(sockfd, &tmpfds))
 		{
 			new_socket = accept(sockfd, NULL, NULL);
+			Client newC;
+			newC.setSocket(new_socket);
+			this->clients.push_back(newC);
 			if (new_socket < 0)
 				perr("accept error failed", sockfd);
 			else{
@@ -117,7 +139,7 @@ Server::Server(int port, std::string arg_pass)
 			{
 				int valread = recv(connected_clients[i], buffer, sizeof(buffer), 0);
                 checkCommands(*this, buffer, connected_clients[i]);
-				executeCommand();
+				executeCommand(i);
 				if (valread > 0)
 				{
 					// add send message to other clients

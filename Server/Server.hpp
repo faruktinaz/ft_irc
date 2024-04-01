@@ -52,7 +52,7 @@ class Server
 {
     private:
 	    struct sockaddr_in			server_address;
-		typedef int(Server::*fpoint)();
+		typedef void(Server::*fpoint)(std::string, int);
         std::vector<Channel>		channels;
         std::vector<Client>			clients;
         std::vector<std::string>	commands;
@@ -71,7 +71,12 @@ class Server
 		std::vector<std::string>	getCommands();
 		std::vector<Client> 		getClients();
 
-		void						executeCommand();
+		void						executeCommand(int clientsockt);
+
+		void						setUser(std::string username, int id);
+		void						setPass(std::string pass, int id);
+		void						setNick(std::string nickname, int id);
+
 		int							getServerFd();
 		int							getAcceptFd();
 		int							getPort();
