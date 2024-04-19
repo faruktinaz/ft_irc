@@ -13,46 +13,20 @@
 #include <arpa/inet.h>
 #include <sstream>
 
-# define SOCKET_ERROR -1
-# define PASS "PASS"
-# define JOIN "JOIN"
-# define USER "USER"
-# define NICK "NICK"
-
-// void Harl::complain(std::string level)
-// {
-//     int j;
-// 	fpoint fp[4] = {&Harl::debug, &Harl::info, &Harl::warning, &Harl::error};
-// 	std::string type[4] = {"DEBUG", "INFO", "WARNING", "ERROR"};
-
-//     for (j = 0; j < 4 ; ++j) {
-//         if (type[j] == level)
-//             break;
-//     }
-
-//     switch (j)
-//     {
-//         case 0:
-//             (this->*fp[0])();
-//         case 1:
-//             (this->*fp[1])();
-//         case 2:
-//             (this->*fp[2])();
-//         case 3:
-//             (this->*fp[3])();
-//             break;
-//         default:
-//             std::cout << "Invalid arguman!!";
-//     }
-// }
-
-
+# define SOCKET_ERROR 	-1
+# define PASS			"PASS"
+# define JOIN			"JOIN"
+# define USER			"USER"
+# define WHO			"WHO"
+# define NICK			"NICK"
+# define JOIN 			"JOIN"
+# define PRIVMSG		"PRIVMSG"
 
 class Server
 {
     private:
 	    struct sockaddr_in			server_address;
-		typedef void(Server::*fpoint)(std::string, int);
+		typedef void(Server::*fpoint)(int, int);
         std::vector<Channel>		channels;
         std::vector<Client>			clients;
         std::vector<std::string>	commands;
@@ -72,10 +46,12 @@ class Server
 		std::vector<Client> 		getClients();
 
 		void						executeCommand(int clientsockt);
-
-		void						setUser(std::string username, int id);
-		void						setPass(std::string pass, int id);
-		void						setNick(std::string nickname, int id);
+		void						User(int index, int id);
+		void						Pass(int index, int id);
+		void						Nick(int index, int id);
+		void						Join(int index, int id);
+		void 						excWho(int id);
+		void						Privmsg(int index, int id);
 
 		int							getServerFd();
 		int							getAcceptFd();
