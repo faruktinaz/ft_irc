@@ -21,14 +21,19 @@ void    Server::Join(int index, int id)
 	}
 
     for (size_t i = 0; i < channels.size(); i++)
+	{
         if (commands[index + 1] == channels[i].getChannelName())
+		{		
+	    	channels[i].addClient(clients[id]);
             is_exist = 1;
+		}
+	}
     if (is_exist == 0)
     {
         Channel channel(commands[index + 1]);
 
-        channel.addClient(clients[index]);
+        channel.addClient(clients[id]);
         channels.push_back(channel);
     }
-    clients[id].print(":" + clients[id].getUserName() + "!" + clients[id].getUserName() + "@" + clients[id].getIp() + " JOIN " + commands[index + 1] + "\r\n");
+    clients[id].print(":" + clients[id].getUserName() + "!" + clients[id].getUserName() + "@localhost" + " JOIN :" + commands[index + 1] + "\r\n");
 }
