@@ -25,22 +25,19 @@ void    Server::Privmsg(int index, int id)
         message += commands[i];
         message += " ";
     }
-    // for (size_t i = 0; i < commands.size(); i++)
-    // {
-    //     std::cout <<"commands[i]" << commands[i] << std::endl;
-    // }
 
     for (size_t i = 0; i < clients.size(); i++)
     {
-        if (strcmp(commands[1].c_str(), channels[i].getChannelName().c_str()) == 0)
+        if ( channels.size() >= i && strcmp(commands[1].c_str(), channels[i].getChannelName().c_str()) == 0)
         {
             std::vector<Client> tmp_client = channels[i].getClients();
             for (size_t j = 0; j < tmp_client.size(); j++)
-            {
-                tmp_client[j].print(":" + clients[id].getNickName() + "!" + clients[id].getUserName() + '@' + clients[id].getIp() + " PRIVMSG " + channels[i].getChannelName() + " :"+ message + "\r\n");
-            }
+                if (tmp_client[j].getNickName() != clients[id].getNickName())
+                    tmp_client[j].print(":" + clients[id].getUserName() + "!" + clients[id].getUserName() + '@' + clients[id].getIp() + " PRIVMSG " + channels[i].getChannelName() + " :"+ message + "\r\n");
         }
+        // else if ()
     }
+}
 
     // if(this->commands[1].compare(this->clients[i].getNick()) == 0)
     // {
@@ -54,4 +51,3 @@ void    Server::Privmsg(int index, int id)
             // this->channels[i].getMembers()[m].print(":" + client.getNick() + "!" + client.getUsername() + '@' + client.getRealIp() + " PRIVMSG " + this->channels[i].getName() + " :"+ message + "\r\n");
         // return ;
     // }
-}
