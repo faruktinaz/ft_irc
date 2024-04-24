@@ -77,28 +77,30 @@ void Server::executeCommand(int id)
 	tfun.push_back(&Server::Nick);
 	tfun.push_back(&Server::Pass);
 	tfun.push_back(&Server::Join);
-	tfun.push_back(&Server::Privmsg);	
+	tfun.push_back(&Server::Privmsg);
+	tfun.push_back(&Server::Who);
 
 	cmds.push_back(USER);
 	cmds.push_back(NICK);
 	cmds.push_back(PASS);
 	cmds.push_back(JOIN);
 	cmds.push_back(PRIVMSG);
+	cmds.push_back(WHO);
 	
 
-	if (commands[0] == WHO)
-		Server::Who(0, id);
-	else if (commands[0] == LIST)
-		Server::List(0, id);
-	
 	for (int i = 0; i < cmds.size(); i++)
 	{
 		for (int j = 0; j < commands.size(); j++)
 		{
 			if ((cmds[i] == commands[j]) && (j+1 < commands.size()))
 			{
-				(this->*tfun[i])(j, id);
-				std::cout << "Finded function: " << cmds[i] << " " << commands[j+1] << std::endl;
+				if (clients[id].getLoggedIn() || i < 3)
+					(this->*tfun[i])(j, id);
+				else
+				{
+					clients[id].print("you need to complete the registration. USER/NICK/PASS\r\n");
+					break;
+				}
 			}
 		}
 	}
@@ -156,7 +158,7 @@ Server::Server(int port, std::string arg_pass)
 				if (valread > 0)
 				{
 					// add send message to other clients
-					std::cout << "message from " << i << ": " <<  buffer << std::endl;
+					// std::cout << "message from " << i << ": " <<  buffer << std::endl;
 					memset(buffer, 0, sizeof(buffer));
 				}
 				else if (valread == 0)

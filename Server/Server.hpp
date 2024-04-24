@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sstream>
+#include <string.h>
 
 # define SOCKET_ERROR 	-1
 # define PASS			"PASS"
