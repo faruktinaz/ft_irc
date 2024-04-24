@@ -7,7 +7,7 @@ SRCS = 	Channel/Channel.cpp Client/Client.cpp Server/Server.cpp \
 OBJS = $(SRCS:.cpp=.o)
 CXX_STANDARD = c++98
 CXX = c++
-CXXFLAGS = -g -fsanitize=address # -Wall -Wextra -Werror -std=$(CXX_STANDARD) -fsanitize=address 
+CXXFLAGS = -g #-fsanitize=address # -Wall -Wextra -Werror -std=$(CXX_STANDARD) -fsanitize=address 
 
 all: $(NAME)
 
