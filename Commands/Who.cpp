@@ -1,6 +1,6 @@
 #include "../Server/Server.hpp"
 
-size_t Server :: returnChannelIndex(std::string channel)
+size_t Server::returnChannelIndex(std::string channel)
 {
     size_t i = 0;
 
@@ -8,7 +8,7 @@ size_t Server :: returnChannelIndex(std::string channel)
     {
         if (this->channels[i].getChannelName() == channel)
 		{
-			std::cout << "sikinti yok" << std::endl;
+			// std::cout << "sikinti yok" << std::endl;
             return i;
 		}
     }
@@ -32,7 +32,7 @@ void Server::Who(int index, int id)
 }
 
 
-void Server :: List(int index, int id)
+void Server::List(int index, int id)
 {
     std::string list;
     for(size_t i = 0; i < this->channels.size(); i++)
