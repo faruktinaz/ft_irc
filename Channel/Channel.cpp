@@ -9,6 +9,6 @@ std::string         Channel::getChannelName() { return this->channelName; }
 
 void				Channel::addClient(Client client) { clients.push_back(client); }
 
-void                Channel::setChannelAdmin(std::string adminName) { this->ChannelAdmin = adminName; }
+// void                Channel::setChannelAdmin(Client client) { client.print("MODE")}
 
 Channel::~Channel() { }
