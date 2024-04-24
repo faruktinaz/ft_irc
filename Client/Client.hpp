@@ -6,7 +6,7 @@ class Client
 {
     private:
         int         socket;
-        int         logged_in;
+        bool        logged_in;
         std::string user_name;
         std::string nick_name;
         std::string pass;
@@ -14,7 +14,7 @@ class Client
     public:
 		Client();
         int         getSocket();
-        int         getLoggedIn();
+        bool        getLoggedIn();
         std::string getUserName();
         std::string getNickName();
         std::string getPass();
@@ -22,7 +22,7 @@ class Client
 
 		void        print(std::string str);
 		void        setSocket(int sockfd);
-        void        setLoggedIn(int sign);
+        void        setLoggedIn(bool sign);
         void        setUserName(std::string user_name);
         void        setNickName(std::string nick_name);
         void        setPass(std::string pass);
