@@ -10,7 +10,6 @@ Client::Client()
     this->logged_in = 0;
 }
 
-
 int         Client::getSocket() { return this->socket; }
 
 bool		Client::getLoggedIn() { return this->logged_in; }
