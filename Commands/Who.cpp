@@ -1,28 +1,21 @@
 #include "../Server/Server.hpp"
 
-size_t Server::returnChannelIndex(std::string channel)
+int Server::getChannelIndex(std::string channel)
 {
-    size_t i = 0;
-
-    for (; i < this->channels.size(); i++)
+    for (size_t i = 0; i < this->channels.size(); i++)
     {
         if (this->channels[i].getChannelName() == channel)
-		{
-			// std::cout << "sikinti yok" << std::endl;
-            return i;
-		}
-    }
-
-    return i;
+            return (int)i;
+	}
+    return -1;
 }
 
-
-void Server::Who(int index, int id)
+void	Server::Who(int index, int id)
 {
 	std::cout << commands[index + 1] << std::endl;
 	if(this->commands[1][0] == '#')
 	{
-		for (size_t j = 0; j < this->channels[returnChannelIndex(this->commands[1])].getClients().size(); j++)
+		for (size_t j = 0; j < this->channels[getChannelIndex(this->commands[1])].getClients().size(); j++)
         {
             clients[id].print("Nick: " + this->clients[j].getNickName() + "\n");
         }
@@ -30,7 +23,6 @@ void Server::Who(int index, int id)
         return ;
 	}
 }
-
 
 void Server::List(int index, int id)
 {

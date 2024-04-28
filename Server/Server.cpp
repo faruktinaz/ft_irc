@@ -11,6 +11,14 @@ int Server::perr(std::string err, int sockfd)
 	exit(-1);
 }
 
+int	Server::getClientIndex(std::string name)
+{
+	for (size_t i = 0; i < clients.size(); i++)
+		if (strcmp(clients[i].getNickName().c_str(), name.c_str()) == 0)
+			return (i);
+	return (-1);	
+}
+
 void Server::checkCommands(Server &server, std::string buffer, int socket)
 {
 	std::stringstream ss(buffer);
@@ -79,6 +87,10 @@ void Server::executeCommand(int id)
 	tfun.push_back(&Server::Join);
 	tfun.push_back(&Server::Privmsg);
 	tfun.push_back(&Server::Who);
+	tfun.push_back(&Server::Kick);
+	tfun.push_back(&Server::Part);
+	tfun.push_back(&Server::Quit);
+	tfun.push_back(&Server::Topic);
 
 	cmds.push_back(USER);
 	cmds.push_back(NICK);
@@ -86,11 +98,14 @@ void Server::executeCommand(int id)
 	cmds.push_back(JOIN);
 	cmds.push_back(PRIVMSG);
 	cmds.push_back(WHO);
-	
+	cmds.push_back(KICK);
+	cmds.push_back(PART);
+	cmds.push_back(QUIT);
+	cmds.push_back(TOPIC);
 
-	for (int i = 0; i < cmds.size(); i++)
+	for (size_t i = 0; i < cmds.size(); i++)
 	{
-		for (int j = 0; j < commands.size(); j++)
+		for (size_t j = 0; j < commands.size(); j++)
 		{
 			if ((cmds[i] == commands[j]) && (j+1 < commands.size()))
 			{
@@ -152,8 +167,8 @@ Server::Server(int port, std::string arg_pass)
                 {
                     clients[i].setLoggedIn(1);
                     std::cout << "Successfully logged into the system!!" << std::endl;
-					clients[i].print(":" + clients[i].getIp() + " 001 " + clients[i].getUserName() + " :Welcome to the Internet Relay Network " \
-						+ clients[i].getUserName() + "!" + clients[i].getUserName() + "@" + clients[i].getIp() + "\r\n");
+					clients[i].print(":" + clients[i].getIp() + " 001 " + clients[i].getNickName() + " :Welcome to the Internet Relay Network " \
+						+ clients[i].getNickName() + "!" + clients[i].getUserName() + "@" + clients[i].getIp() + "\r\n");
                 }
 				if (valread > 0)
 				{
@@ -164,7 +179,6 @@ Server::Server(int port, std::string arg_pass)
 				else if (valread == 0)
 				{
 					std::cout << "client disconnected" << i << std::endl;
-					close(connected_clients[i]);
 					connected_clients.erase(connected_clients.begin()+i);
 					--i;
 				}

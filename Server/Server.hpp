@@ -19,10 +19,14 @@
 # define JOIN			"JOIN"
 # define USER			"USER"
 # define WHO			"WHO"
+# define QUIT			"QUIT"
+# define PART			"PART"
+# define TOPIC			"TOPIC"
 # define LIST			"LIST"
 # define NICK			"NICK"
 # define JOIN 			"JOIN"
 # define PRIVMSG		"PRIVMSG"
+# define KICK			"KICK"
 
 class Server
 {
@@ -47,6 +51,9 @@ class Server
 		std::vector<std::string>	getCommands();
 		std::vector<Client> 		getClients();
 
+		void    					Part(int index, int id);
+		void    					Topic(int index, int id);
+		void    					Quit(int index, int id);
 		void						executeCommand(int clientsockt);
 		void						User(int index, int id);
 		void						Pass(int index, int id);
@@ -54,10 +61,14 @@ class Server
 		void						Join(int index, int id);
 		void						Who(int index, int id);
 		void						List(int index, int id);
+		void						Kick(int index, int id);
 		void 						excWho(int id);
-		size_t						returnChannelIndex(std::string channel);
 		void						Privmsg(int index, int id);
+		void    					Part2(int index, int id, Channel& channel, int flag);
 
+		int							isInChannel(std::vector<Client> c_clients, std::string name);
+		int							getChannelIndex(std::string name);
+		int							getClientIndex(std::string name);
 		int							getServerFd();
 		int							getAcceptFd();
 		int							getPort();
