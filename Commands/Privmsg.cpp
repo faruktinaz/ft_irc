@@ -1,25 +1,23 @@
 #include "../Server/Server.hpp"
 
-/*
-
-message from 0: MODE elmaa
-
-message from 0: WHO elmaa
-
-message from 0: MODE elmaa b
-
-message from 0: PRIVMSG elmaa :ben geldim kral
-
-privmsg Pragma Hello! ** burada sadece 1 kişiye mesaj yollanmış
-privmsg Pragma,Crocodile Hello to you both! ** burada ise iki kişiye yollanmış
-privmsg #kvirc Hello from outside! ** burada channel'a yollanmış
-
-*/
+int	Server::isInChannel(std::vector<Client> c_clients, std::string name)
+{
+	for (size_t i = 0; i < c_clients.size(); i++)
+		if (strcmp(c_clients[i].getNickName().c_str(),name.c_str()) == 0)
+			return i;
+	return -1;
+}
 
 void    Server::Privmsg(int index, int id)
 {
     std::string message = "";
 	size_t i;
+	static int flag = 0;
+	if (commands.size() < 3)
+	{
+		std::cout << "You should use like this: PRIVMSG userName message";
+		clients[id].print("You should use like this: PRIVMSG userName message\n");
+	}
 
     for (i = 2; i < this->commands.size(); i++)
     {
@@ -29,8 +27,7 @@ void    Server::Privmsg(int index, int id)
 
     for (i = 0; i < clients.size(); i++)
     {
-		std::cout << "commands[1].sub: " << commands[1].substr(0)<< std::endl;
-        if (channels.size() > i && strcmp(commands[1].c_str(), channels[i].getChannelName().c_str()) == 0)
+        if (channels.size() > i && strcmp(commands[1].c_str(), channels[i].getChannelName().c_str()) == 0 && isInChannel(channels[i].getClients(), clients[id].getNickName()) != -1)
         {
             std::vector<Client> tmp_client = channels[i].getClients();
             for (size_t j = 0; j < tmp_client.size(); j++)
@@ -42,8 +39,7 @@ void    Server::Privmsg(int index, int id)
         }
         else if (strcmp(clients[i].getNickName().c_str(),commands[1].c_str()) == 0)
 		{
-            clients[i].print(":" + clients[id].getUserName() + "!" + clients[id].getUserName() + '@' + clients[id].getIp() + " PRIVMSG " + clients[i].getNickName() + " :"+ message + "\r\n");
-            clients[id].print(":" + clients[id].getUserName() + "!" + clients[id].getUserName() + '@' + clients[id].getIp() + " PRIVMSG " + clients[i].getNickName() + " :"+ message + "\r\n");
+			clients[i].print(":" + clients[id].getNickName() + "!" + clients[id].getUserName() + "@localhost"+ " PRIVMSG " + clients[i].getNickName() + " :"+ message + "\r\n");
 			return;
 		}
     }
