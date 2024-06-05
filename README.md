@@ -15,3 +15,5 @@ IRC (Internet Relay Chat) is a **protocol for real-time text messaging between 
 | Part | The PART command removes the client from the given channel(s). |
 | Who | The WHO command shows who is in the channel entered as a parameter. |
 | Pass | The PASS command compares a new user's password with the server's password and if it is correct, it successfully connects to the server. |
+
+![network.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d01cd12e-f32c-45db-b7ff-6d3fb30b2436/4707e539-b9e0-435d-a01e-1dbb58e31586/network.png)
