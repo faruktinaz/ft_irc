@@ -16,4 +16,4 @@ IRC (Internet Relay Chat) is a **protocol for real-time text messaging between 
 | Who | The WHO command shows who is in the channel entered as a parameter. |
 | Pass | The PASS command compares a new user's password with the server's password and if it is correct, it successfully connects to the server. |
 
-![network](https://github.com/faruktinaz/ft_irc/assets/114104599/c58afdef-3d2a-4b50-966e-bb97332a5a13)
+<p align="center"> <img src=["assets/network.png"](https://github.com/faruktinaz/ft_irc/assets/114104599/c58afdef-3d2a-4b50-966e-bb97332a5a13)> </p>
